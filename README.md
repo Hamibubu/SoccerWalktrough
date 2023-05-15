@@ -7,7 +7,7 @@ HTB
 
 Encontramos 
 
-"22/tcp   open  ssh
+```22/tcp   open  ssh
 80/tcp   open  http
 |_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
 |_http-csrf: Couldn't find any CSRF vulnerabilities.
@@ -25,7 +25,7 @@ Encontramos
 |       https://www.securityfocus.com/bid/49303
 |_      https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-3192
 |_http-dombased-xss: Couldn't find any DOM based XSS.
-9091/tcp open  xmltec-xmlmail"
+9091/tcp open  xmltec-xmlmail```
 
 
 
