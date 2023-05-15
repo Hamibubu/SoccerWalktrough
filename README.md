@@ -71,6 +71,80 @@ Parece haber otro subdominio, así que lo agregamos
 
 ![imagen](https://github.com/Hamibubu/SoccerWalktrough/assets/108554878/62f8dd2a-09a8-41e4-aa4b-3078b57598de)
 
+Es una página similar, pero en esta nos pide logearnos, así que lo hacemos
+
+Entramos y nos muestra una página para checar tickets, podemos tratar sql injection, interceptamos la petición con burpsuite
+
+![imagen](https://github.com/Hamibubu/SoccerWalktrough/assets/108554878/864a2227-794e-43c4-964e-6b576a148eaf)
+
+Utiliza algo llamado websocket, investigando en internet parece ser que el puerto 9091 no esta abierto de casualidad es para el ws
+
+![imagen](https://github.com/Hamibubu/SoccerWalktrough/assets/108554878/453f9bf9-d03d-465b-96cb-0bf9d474f09e)
+
+Este solicita mediante http cambiar a websocket en una peticion GET
+
+Podemos ver en el código fuente si utiliza ws o wss que es encriptado
+
+![imagen](https://github.com/Hamibubu/SoccerWalktrough/assets/108554878/1f6b36cc-121d-4120-b643-bad2bda5d3ac)
+
+Vemos que utiliza ws, podemos intentar SQLi
+
+![imagen](https://github.com/Hamibubu/SoccerWalktrough/assets/108554878/1ce71468-e98c-4ae8-b0d8-d7734c178877)
+![imagen](https://github.com/Hamibubu/SoccerWalktrough/assets/108554878/52cafa5e-a1c0-45bb-9e65-43400f6bcb7c)
+
+Pero hay un ligero problema, si tratamos de automatizar recordemos que no estamos usando http, así que investigando encontramos un script, que genera un server en medio y detiene los pedidos y los traduce a websocket
+
+https://rayhan0x01.github.io/ctf/2021/04/02/blind-sqli-over-websocket-automation.html
+
+Con esto podemos generar el server en otro puerto y eso se lo ponemos en sqlmap para pasar por ahí las cosas a ws
+
+Primero vemos la databse en la que estamos
+
+![imagen](https://github.com/Hamibubu/SoccerWalktrough/assets/108554878/5b928c76-2658-4525-93d0-c691c74c0610)
+
+Escaneamos la db encontrada
+
+![imagen](https://github.com/Hamibubu/SoccerWalktrough/assets/108554878/bba55dca-58de-446b-9630-9a5c3b2da897)
+
+Vemos una tabla de accounts, veamos su contenido
+
+![imagen](https://github.com/Hamibubu/SoccerWalktrough/assets/108554878/587cd747-57e6-4951-b0f2-a602738502db)
+
+Parece ser una contraseña de ssh
+
+![imagen](https://github.com/Hamibubu/SoccerWalktrough/assets/108554878/eb298f8d-fdc9-4402-9212-9ae87c7093f5)
+
+Ahora parece que tenemos el user
+
+![imagen](https://github.com/Hamibubu/SoccerWalktrough/assets/108554878/f744eef3-a777-4fa7-be0c-6d762319afa3)
+
+No se nos permite usar sudo, así que buscamos los binarios que hay con permisos -4000 y el 2>/dev/null es para ignorar los errores
+
+Vemos que esta doas que es un binario como sudo
+
+Investigamos los archivos de doas y vemos un .conf
+
+![imagen](https://github.com/Hamibubu/SoccerWalktrough/assets/108554878/734df9b0-2fb9-4a5f-b647-a607adc1cc97)
+
+Parece que podemos correr dstat como root
+
+![imagen](https://github.com/Hamibubu/SoccerWalktrough/assets/108554878/4b7b10a6-f09d-4c98-8d72-2e4da654a029)
+
+En la carpeta share se pueden crear plugins, creamos uno que nos devuelva una bash
+
+```
+import os
+
+os.system("chmod u+s \bin\bash")
+```
+
+![imagen](https://github.com/Hamibubu/SoccerWalktrough/assets/108554878/74b3c0f8-f72a-49be-b313-c4b7aff1a58b)
+
+Listo
+
+![imagen](https://github.com/Hamibubu/SoccerWalktrough/assets/108554878/12df32f6-d9ac-4316-bb87-b3596491d3ea)
+
+
 
 
 
